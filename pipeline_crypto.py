@@ -34,16 +34,10 @@ class PipelineCryptoBT:
         self.all_results = []
 
     def descargar_datos_binance(self):
-        archivo_datos = self.data_dir / "btc_5m_data.csv"
-        if archivo_datos.exists():
-            logger.info(f"Cargando datos desde archivo local: {archivo_datos}")
-            df = pd.read_csv(archivo_datos, index_col='Date', parse_dates=True)
-            self.df = df
-            return df
-
         logger.info(f"Descargando datos de {self.SYMBOL} desde Binance...")
         exchange = ccxt.binance()
         
+        # Calcular fecha de inicio (15 meses atrás)
         since = exchange.parse8601((datetime.now() - timedelta(days=15 * 30)).isoformat())
         
         all_ohlcv = []
@@ -60,24 +54,22 @@ class PipelineCryptoBT:
         df['Date'] = pd.to_datetime(df['Date'], unit='ms')
         df = df.set_index('Date')
         
+        # Asegurar que tenemos exactamente 15 meses
         cutoff = datetime.now() - timedelta(days=15 * 30)
         df = df[df.index >= cutoff]
         
         self.df = df
-        df.to_csv(archivo_datos)
+        df.to_csv(self.data_dir / "btc_5m_data.csv")
         logger.info(f"Datos guardados. Total velas: {len(df)}")
         return df
 
     def generar_parametros(self, n: int) -> List[Dict]:
         estrategias = []
-        tipos = ['ma_cross', 'rsi_only', 'rsi_vol', 'vol_only', 'ma_vol', 'rsi_ma']
-        
         for i in range(n):
-            # Distribución equitativa: asigna el tipo basándose en el índice i
-            tipo = tipos[i % len(tipos)]
-            
             sl_pct = round(random.uniform(0.005, 0.02), 4)
             tp_pct = round(random.uniform(0.01, 0.04), 4)
+            
+            tipo = random.choice(['ma_cross', 'rsi_only', 'rsi_vol', 'vol_only', 'ma_vol', 'rsi_ma'])
             
             params = {
                 'name': f'STRAT_{tipo}_{i}',
@@ -172,8 +164,12 @@ class PipelineCryptoBT:
         for i, params in enumerate(estrategias_params):
             if i % 50 == 0: logger.info(f"Evaluando {i}/{self.N_STRATEGIES}...")
             res = self.run_estrategia(self.df, params)
-            if res and res['trades'] > 2:
+            if res and res['trades'] > 0:
                 resultados.append(res)
+        
+        if len(resultados) == 0:
+            logger.error("Ninguna estrategia produjo trades")
+            return
         
         # Top 10 por Sharpe
         top10 = sorted(resultados, key=lambda x: x['sharpe'] if not np.isnan(x['sharpe']) else -1, reverse=True)[:10]
@@ -201,6 +197,7 @@ class PipelineCryptoBT:
                 f.write("\n---\n\n")
         
         logger.info("Pipeline completado. Informe generado en results/informe.md")
+
 
 if __name__ == "__main__":
     pipeline = PipelineCryptoBT()
