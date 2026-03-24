@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  backtest:
+    build: .
+    container_name: btc-backtest-pipeline
+    volumes:
+      - ./data:/app/data
+      - ./results:/app/results
+    restart: unless-stopped
