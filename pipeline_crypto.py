@@ -71,8 +71,8 @@ class PipelineCryptoBT:
             # Distribución equitativa: asigna el tipo basándose en el índice i
             tipo = tipos[i % len(tipos)]
             
-            sl_pct = round(random.uniform(0.002, 0.05), 4)
-            tp_pct = round(random.uniform(0.005, 0.1), 4)
+            sl_pct = round(random.uniform(0.001, 0.1), 4)
+            tp_pct = round(random.uniform(0.005, 0.2), 4)
             
             params = {
                 'name': f'STRAT_{tipo}_{i}',
@@ -82,17 +82,17 @@ class PipelineCryptoBT:
             }
             
             if tipo == 'ma_cross':
-                params.update({'fast_period': random.randint(5, 100), 'slow_period': random.randint(50, 200)})
+                params.update({'fast_period': random.randint(5, 200), 'slow_period': random.randint(50, 300)})
             elif tipo == 'rsi_only':
-                params.update({'rsi_period': random.randint(7, 30), 'rsi_oversold': random.randint(20, 40)})
+                params.update({'rsi_period': random.randint(7, 50), 'rsi_oversold': random.randint(15, 45)})
             elif tipo == 'rsi_vol':
-                params.update({'rsi_period': random.randint(7, 30), 'rsi_oversold': random.randint(20, 40), 'vol_period': random.randint(10, 50), 'vol_mult': round(random.uniform(1.0, 3.0), 2)})
+                params.update({'rsi_period': random.randint(7, 50), 'rsi_oversold': random.randint(15, 45), 'vol_period': random.randint(10, 100), 'vol_mult': round(random.uniform(0.5, 5.0), 2)})
             elif tipo == 'vol_only':
-                params.update({'vol_period': random.randint(10, 50), 'vol_mult': round(random.uniform(1.0, 3.0), 2)})
+                params.update({'vol_period': random.randint(10, 100), 'vol_mult': round(random.uniform(0.5, 5.0), 2)})
             elif tipo == 'ma_vol':
-                params.update({'ma_period': random.randint(20, 200), 'vol_period': random.randint(10, 50), 'vol_mult': round(random.uniform(1.0, 3.0), 2)})
+                params.update({'ma_period': random.randint(20, 300), 'vol_period': random.randint(10, 100), 'vol_mult': round(random.uniform(0.5, 5.0), 2)})
             elif tipo == 'rsi_ma':
-                params.update({'rsi_period': random.randint(7, 30), 'rsi_oversold': random.randint(20, 40), 'ma_period': random.randint(20, 200)})
+                params.update({'rsi_period': random.randint(7, 50), 'rsi_oversold': random.randint(15, 45), 'ma_period': random.randint(20, 300)})
             
             estrategias.append(params)
         return estrategias
