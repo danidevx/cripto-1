@@ -34,10 +34,16 @@ class PipelineCryptoBT:
         self.all_results = []
 
     def descargar_datos_binance(self):
+        archivo_datos = self.data_dir / "btc_5m_data.csv"
+        if archivo_datos.exists():
+            logger.info(f"Cargando datos desde archivo local: {archivo_datos}")
+            df = pd.read_csv(archivo_datos, index_col='Date', parse_dates=True)
+            self.df = df
+            return df
+
         logger.info(f"Descargando datos de {self.SYMBOL} desde Binance...")
         exchange = ccxt.binance()
         
-        # Calcular fecha de inicio (15 meses atrás)
         since = exchange.parse8601((datetime.now() - timedelta(days=15 * 30)).isoformat())
         
         all_ohlcv = []
@@ -54,12 +60,11 @@ class PipelineCryptoBT:
         df['Date'] = pd.to_datetime(df['Date'], unit='ms')
         df = df.set_index('Date')
         
-        # Asegurar que tenemos exactamente 15 meses
         cutoff = datetime.now() - timedelta(days=15 * 30)
         df = df[df.index >= cutoff]
         
         self.df = df
-        df.to_csv(self.data_dir / "btc_5m_data.csv")
+        df.to_csv(archivo_datos)
         logger.info(f"Datos guardados. Total velas: {len(df)}")
         return df
 

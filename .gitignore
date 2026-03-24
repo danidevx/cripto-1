@@ -1,0 +1,86 @@
+# cd app/results && cat informe.md && cat ranking_completo.csv
+
+# Datos (muy grandes)
+estrategias/
+
+# Resultados
+results/
+
+# Modelos IA
+models/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Entornos virtuales
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+
+ INFORME DE ESTRATEGIA
+
+### MÉTRICAS GLOBALES
+| Métrica | Valor |
+|--------|-------|
+| Total operaciones | 62 |
+| Operaciones ganadoras | 18 (29.0%) |
+| Operaciones perdedoras | 44 (71.0%) |
+| Profit factor | 3.33 |
+| Sharpe ratio | 2.09 |
+| Drawdown máximo | 8.1% |
+| Rentabilidad total | 159.5% |
+| Rentabilidad anualizada | 75.6% |
+
+### DESGLOSE POR fechas
+| fechas | Operaciones | Win% | Sharpe | DD | Rentabilidad |
+|--------|-------------|------|--------|-----|--------------|
+
+### DESGLOSE POR DIRECCIÓN
+| Dirección | Operaciones | Win Rate | Rentabilidad |
+|-----------|-------------|----------|--------------|
+| COMPRAS (LONG) | 62 | 29.0% | 89.2% |
+| VENTAS (SHORT) | 0 | 0.0% | 0.0% |
+
+### MÉTRICAS DE RIESGO
+| Métrica | Valor |
+|--------|-------|
+| Ganancia media | 7.55% |
+| Pérdida media | -1.06% |
+| Ratio reward/risk | 7.12 |
+
+### PARÁMETROS
+{
+  "commission": 0.00026191766360783895,
+  "slippage": 0.00032651066853186064,
+  "risk_per_trade": 0.009683396844209009,
+  "bb_period": 22,
+  "bb_std": 2.0235056746418474,
+  "rsi_period": 20,
+  "rsi_oversold": 50,
+  "atr_period": 18,
+  "atr_mult": 1.6823163187895247,
+  "tp_pct": 0.04941958426349331,
+  "sma_period": 182,
+  "vol_period": 16
+}
+
+### FECHA
+2026-04-24T02:49:57.854958
